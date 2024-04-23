@@ -15,3 +15,10 @@ upload-test
 *.ntvs*
 *.njsproj
 *.sln
+
+# Log files
+*.log
+
+# Config files
+config.json
+.env

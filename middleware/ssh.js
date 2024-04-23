@@ -54,7 +54,7 @@ async function initConfig() {
 
   const configs = {
     host,
-    port,
+    port: port || 22,
     username,
     [wayOpt.value]: value,
     name
@@ -72,11 +72,12 @@ module.exports = class SshConfig {
     this.id = timestamp.getTime();
     this.created_time = getFormatDate(timestamp)
 
-    this.init()
+    this.init(props)
   }
 
-  async init() {
+  async init(props) {
     this.configs = await initConfig()
+    props.autoSave && this.saveConfigs()
   }
 
   saveConfigs() {

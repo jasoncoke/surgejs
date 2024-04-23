@@ -1,6 +1,11 @@
 require('colors');
 const { program } = require('commander');
+const Table = require('cli-table3');
+
+const SshConfig = require('./ssh');
+
 const { readEnvFile, writeEnvFile } = require('./env');
+const { displayOptions, getFormatDate, readJsonFile, writeJsonFile } = require('./helper');
 
 // 终端命令集合
 module.exports = {
@@ -38,11 +43,34 @@ module.exports = {
       console.log('deploy')
     }
   },
-  'servers': {
-    description: 'Show all servers',
+  'show': {
+    description: 'Diaplay something',
+    options: [
+      ['servers', 'Show all servers']
+    ],
     action: (args, options) => {
-      if (options.args.length === 0) {
-        console.log('无参数');
+      if (options.args[0] === 'servers') {
+        const table = new Table({
+          head: ['name', 'host', 'created_time']
+        });
+        readJsonFile('config')['servers'].forEach(server => {
+          table.push([server.name, server.host, server.created_time]);
+        })
+
+        console.log(table.toString());
+      }
+    }
+  },
+  'server': {
+    description: 'Diaplay something',
+    options: [
+      ['add', 'Add new server']
+    ],
+    action: (args, options) => {
+      if (options.args[0] === 'add') {
+        new SshConfig({
+          autoSave: true
+        })
       }
     }
   }
