@@ -13,7 +13,7 @@ Object.entries(terminal).forEach(([key, value]) => {
 
   if (value.options && Array.isArray(value.options) && value.options.length) {
     value.options.forEach(option => {
-      command.option(option[0], option[1], option[2]);
+      option && command.option(option[0], option[1], option[2]);
     });
   }
 });
