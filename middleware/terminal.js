@@ -59,10 +59,10 @@ module.exports = {
     action: (args, options) => {
       if (options.args[0] === 'servers') {
         const table = new Table({
-          head: ['id', 'name', 'host', 'created_time']
+          head: ['name', 'host', 'created_time']
         });
         readJsonFile('config')['servers'].forEach(server => {
-          table.push([server.id, server.name, server.host, server.created_time]);
+          table.push([server.name, server.host, server.created_time]);
         })
 
         console.log(table.toString());
@@ -70,10 +70,10 @@ module.exports = {
     }
   },
   'server': {
-    description: 'Diaplay something',
+    description: 'Add, delete, modify and check the saved server list',
     options: [
       ['add', 'Add new server'],
-      ['remove <server_id | server_name>', 'Remove a server']
+      ['remove <server_host | server_name>', 'Remove a server']
     ],
     action: (args, options) => {
       const server = new Server();

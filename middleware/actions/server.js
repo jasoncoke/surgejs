@@ -2,73 +2,12 @@ require('colors');
 const inquirer = require('inquirer');
 
 const { getFormatDate, readJsonFile, writeJsonFile } = require('../helper');
-
-async function inputServerConfig() {
-  const questions = [
-    {
-      type: 'input',
-      name: 'host',
-      message: 'Host: ',
-    },
-    {
-      type: 'input',
-      name: 'port',
-      default: 22,
-      message: 'Port (Default 22): ',
-    },
-    {
-      type: 'input',
-      name: 'username',
-      message: 'Username: ',
-    },
-    {
-      type: 'list',
-      name: 'connectMethod',
-      message: 'Choose how to connect: ',
-      choices: [
-        { value: 1, name: 'Password' },
-        { value: 2, name: 'Private Key' }
-      ]
-    }
-  ];
-
-  const answers = await inquirer.prompt(questions)
-
-  const questionsNext = [
-    {
-      type: 'input',
-      name: 'name',
-      message: '[optional] You can give the current configuration a name: '
-    }
-  ]
-
-  if (answers.connectMethod === 1) {
-    questionsNext.unshift({
-      type: 'password',
-      name: 'password',
-      message: 'Password: ',
-    })
-  } else if (answers.connectMethod === 2) {
-    questionsNext.unshift({
-      type: 'input',
-      name: 'privateKeyPath',
-      message: 'Private key path: ',
-    })
-  }
-
-  const answersNext = await inquirer.prompt(questionsNext)
-
-  return Promise.resolve({
-    ...answers,
-    ...answersNext
-  });
-}
+const { readEnvFile } = require('../env');
 
 module.exports = class Server {
   constructor() {
     const timestamp = new Date();
 
-    this.id = timestamp.getTime();
     this.created_time = getFormatDate(timestamp)
 
     this.CONFIG_KEY = 'servers';
@@ -78,14 +17,13 @@ module.exports = class Server {
   }
 
   async add() {
-    this.configs = await inputServerConfig();
+    this.configs = await this.inputServerConfig(this.list);
     this.save();
   }
 
   save() {
     const params = {
       ...this.configs,
-      id: this.id,
       created_time: this.created_time
     }
 
@@ -98,17 +36,17 @@ module.exports = class Server {
     writeJsonFile('config', this.CONFIG_KEY, this.list)
   }
 
-  remove(id) {
-    if (!id) {
-      return console.log('Please input server id'.bgRed);
+  remove(value) {
+    if (!value) {
+      return console.log('Please input server host or server name'.bgRed);
     }
 
-    const server = this.list.find(server => server.id === id)
+    const server = this.list.find(server => server.name === value || server.host === value)
     if (!server) {
-      console.log(`Server with id ${id} not found`.bgRed);
+      console.log(`Server not found`.bgRed, `You can use 'surgejs show servers' to view all servers`);
     } else {
-      this.list = this.list.filter(server => server.id !== id)
-      console.log(`Server 「 ${id} 」 removed`.green);
+      this.list = this.list.filter(item => item.host !== server.host)
+      console.log(`Server 「 ${value} 」 removed`.green);
       this.write();
     }
   }
@@ -117,11 +55,11 @@ module.exports = class Server {
     const questions = [
       {
         type: 'list',
-        name: 'selectServerId',
+        name: 'selectServerHost',
         message: 'Select or add a server: ',
         choices: this.list.map(server => ({
           name: `${server.name} - ${server.host}`,
-          value: server.id
+          value: server.host
         })).concat({
           name: 'Add new server',
           value: 'add'
@@ -129,12 +67,80 @@ module.exports = class Server {
       }
     ]
 
-    const { selectServerId } = await inquirer.prompt(questions)
+    const { selectServerHost } = await inquirer.prompt(questions)
 
-    if (selectServerId === 'add') {
+    if (selectServerHost === 'add') {
       await this.add()
     } else {
-      this.activeServer = this.list.find(server => server.id === selectServerId);
+      this.activeServer = this.list.find(server => server.host === selectServerHost);
     }
+  }
+
+  async inputServerConfig(list) {
+    const questions = [
+      {
+        type: 'input',
+        name: 'host',
+        message: 'Host: ',
+        validate(value) {
+          return list.find(server => server.host === value) ? 'Host already exists' : true;
+        }
+      },
+      {
+        type: 'input',
+        name: 'port',
+        default: 22,
+        message: 'Port (Default 22): ',
+      },
+      {
+        type: 'input',
+        name: 'username',
+        message: 'Username: ',
+      },
+      {
+        type: 'list',
+        name: 'connectMethod',
+        message: 'Choose how to connect: ',
+        choices: [
+          { value: 1, name: 'Password' },
+          { value: 2, name: 'Private Key' }
+        ]
+      }
+    ];
+
+    const answers = await inquirer.prompt(questions)
+
+    const questionsNext = [
+      {
+        type: 'input',
+        name: 'name',
+        message: '[optional] You can give the current configuration a name: ',
+        validate(value) {
+          return list.find(server => server.name === value) ? 'Server name already exists' : true;
+        }
+      }
+    ]
+
+    if (answers.connectMethod === 1) {
+      questionsNext.unshift({
+        type: 'password',
+        name: 'password',
+        message: 'Password: ',
+      })
+    } else if (answers.connectMethod === 2) {
+      questionsNext.unshift({
+        type: 'input',
+        name: 'privateKeyPath',
+        default: readEnvFile().SSH_PRIVATE_KEY_PATH || '',
+        message: 'Private key path: ',
+      })
+    }
+
+    const answersNext = await inquirer.prompt(questionsNext)
+
+    return Promise.resolve({
+      ...answers,
+      ...answersNext
+    });
   }
 }
