@@ -3,6 +3,7 @@ const { program } = require('commander');
 const Table = require('cli-table3');
 
 const Deploy = require('./actions/deploy');
+const Show = require('./actions/show');
 const Server = require('./actions/server');
 
 const { readEnvFile, writeEnvFile } = require('./env');
@@ -47,6 +48,8 @@ module.exports = {
       const deploy = new Deploy()
       if (options.args[0] === 'init') {
         deploy.init()
+      } else if (options.args.length === 0) {
+        deploy.deploy()
       }
     }
   },
@@ -57,15 +60,9 @@ module.exports = {
       ['configs', 'Show all configs']
     ],
     action: (args, options) => {
+      const show = new Show();
       if (options.args[0] === 'servers') {
-        const table = new Table({
-          head: ['name', 'host', 'created_time']
-        });
-        readJsonFile('config')['servers'].forEach(server => {
-          table.push([server.name, server.host, server.created_time]);
-        })
-
-        console.log(table.toString());
+        show.getServerList();
       }
     }
   },

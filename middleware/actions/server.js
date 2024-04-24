@@ -76,6 +76,10 @@ module.exports = class Server {
     }
   }
 
+  getServerByHost(host) {
+    return this.list.find(server => server.host === host);
+  }
+
   async inputServerConfig(list) {
     const questions = [
       {

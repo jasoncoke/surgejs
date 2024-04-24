@@ -2,6 +2,7 @@ require('colors');
 const inquirer = require('inquirer');
 
 const Server = require('./server')
+const { readJsonFile, writeJsonFile } = require('../helper');
 
 async function inputDeployConfig() {
   const questions = [
@@ -28,21 +29,46 @@ async function inputDeployConfig() {
     await server.select()
   }
 
-  console.log(server.activeServer);
+  return Promise.resolve({
+    ...answers,
+    host: server.activeServer.host,
+  })
 }
 
 module.exports = class Deploy {
-  constructor(props = {
-    rootDir: process.cwd(),
-  }) {
+  constructor() {
     this.CONFIG_KEY = 'projects';
+    this.list = readJsonFile('config')[this.CONFIG_KEY] || [];
+
+    this.configs = {
+      rootPath: process.cwd()
+    };
   }
 
   async init() {
-    await inputDeployConfig()
+    const configs = await inputDeployConfig()
+    this.configs = {
+      ...this.configs,
+      ...configs,
+    }
+
+    this.list.push(this.configs)
+    this.save()
   }
 
-  save() { }
+  save() {
+    writeJsonFile('config', this.CONFIG_KEY, this.list)
+  }
 
   clean() { }
+
+  deploy() {
+    const currentProject = this.list.find(project => project.rootPath === this.configs.rootPath)
+    if (!currentProject) {
+      console.log('Project not found'.bgRed, `Please use 'surgejs deploy init' to initialize the current project`.magenta);
+    } else {
+      const server = new Server().getServerByHost(currentProject.host);
+      console.log(`Deploying project ${server.name}`.bgGreen);
+    }
+  }
 }
