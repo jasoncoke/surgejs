@@ -2,7 +2,8 @@ require('colors');
 const { program } = require('commander');
 const Table = require('cli-table3');
 
-const SshConfig = require('./ssh');
+const Deploy = require('./actions/deploy');
+const Server = require('./actions/server');
 
 const { readEnvFile, writeEnvFile } = require('./env');
 const { displayOptions, getFormatDate, readJsonFile, writeJsonFile } = require('./helper');
@@ -39,22 +40,29 @@ module.exports = {
   },
   'deploy': {
     description: 'Deploy project to server',
+    options: [
+      ['init', 'Add new server'],
+    ],
     action: (args, options) => {
-      console.log('deploy')
+      const deploy = new Deploy()
+      if (options.args[0] === 'init') {
+        deploy.init()
+      }
     }
   },
   'show': {
     description: 'Diaplay something',
     options: [
       ['servers', 'Show all servers']
+      ['configs', 'Show all configs']
     ],
     action: (args, options) => {
       if (options.args[0] === 'servers') {
         const table = new Table({
-          head: ['name', 'host', 'created_time']
+          head: ['id', 'name', 'host', 'created_time']
         });
         readJsonFile('config')['servers'].forEach(server => {
-          table.push([server.name, server.host, server.created_time]);
+          table.push([server.id, server.name, server.host, server.created_time]);
         })
 
         console.log(table.toString());
@@ -64,13 +72,15 @@ module.exports = {
   'server': {
     description: 'Diaplay something',
     options: [
-      ['add', 'Add new server']
+      ['add', 'Add new server'],
+      ['remove <server_id | server_name>', 'Remove a server']
     ],
     action: (args, options) => {
+      const server = new Server();
       if (options.args[0] === 'add') {
-        new SshConfig({
-          autoSave: true
-        })
+        server.add()
+      } else if (options.args[0] === 'remove') {
+        server.remove(options.args[1])
       }
     }
   }
