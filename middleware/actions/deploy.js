@@ -1,7 +1,10 @@
 require('colors');
+const fs = require('fs');
+const path = require('path');
 const inquirer = require('inquirer');
 
 const Server = require('./server')
+const deploySftp = require('../sftp');
 const { readJsonFile, writeJsonFile } = require('../helper');
 
 async function inputDeployConfig() {
@@ -50,6 +53,7 @@ module.exports = class Deploy {
     this.configs = {
       ...this.configs,
       ...configs,
+      localPath: path.resolve(this.configs.rootPath, configs.folderName)
     }
 
     this.list.push(this.configs)
@@ -68,7 +72,29 @@ module.exports = class Deploy {
       console.log('Project not found'.bgRed, `Please use 'surgejs deploy init' to initialize the current project`.magenta);
     } else {
       const server = new Server().getServerByHost(currentProject.host);
-      console.log(`Deploying project ${server.name}`.bgGreen);
+      console.log(` Deploying project to ${server.name || server.host}... `.bgGreen);
+
+      deploySftp({
+        localPath: currentProject.localPath,
+        remotePath: currentProject.remotePath,
+        sftpConfig: this.getSftpConfig(server)
+      })
     }
+  }
+
+  getSftpConfig(server) {
+    const sftpConfig = {
+      host: server.host,
+      port: server.port,
+      username: server.username,
+    }
+
+    if (server.connectMethod === 1) {
+      sftpConfig.password = server.password
+    } else if (server.connectMethod === 2) {
+      sftpConfig.privateKey = fs.readFileSync(server.privateKeyPath)
+    }
+
+    return sftpConfig
   }
 }
