@@ -30,6 +30,6 @@ program.action((args, options) => {
 
 program.parse(process.argv);
 
-if (program.args.length === 1) {
-  console.log(program.help(program.args[0]));
-}
+// if (program.args.length === 1) {
+//   console.log(program.help(program.args[0]));
+// }
