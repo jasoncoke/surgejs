@@ -3,36 +3,40 @@ require('colors');
 const fs = require('fs');
 const path = require('path');
 const SftpClient = require('ssh2-sftp-client');
-const progress = require('progress-stream');
+const ProgressBar = require('./progressBar');
 
-const { formatBytes } = require('./helper');
-const { log } = require('console');
+const { getFolderSize, formatBytes } = require('./helper');
 
 module.exports = async function deploySftp({ localPath, remotePath, sftpConfig }) {
   const sftp = new SftpClient();
   try {
     const startTimesStamp = Date.now();
-    const stat = fs.statSync(localPath);
-    const progressStream = progress({
-      time: 100,
-      length: stat.size,
-    });
-    // 创建进度条
-    progressStream.on('progress', (progress) => {
-      console.log(`Uploading: ${progress.transferred}/${progress.length}`);
-    });
+    const folderSizeBytes = getFolderSize(localPath)
+    const folderName = path.basename(localPath);
+    let remoteSize = 0;
 
     // 连接到 SFTP 服务器
     await sftp.connect(sftpConfig);
 
-    // 获取本地文件夹名称
-    const folderName = path.basename(localPath);
+    const progressBar = new ProgressBar({
+      total: folderSizeBytes,
+    })
+    setInterval(() => {
+      progressBar.current += 100;
+    }, 100);
+
+    sftp.on('upload', info => {
+      const file = fs.statSync(info.source);
+      remoteSize += file.size
+      progressBar.current = remoteSize;
+    });
 
     // 上传文件
-    await sftp.uploadDir(localPath, path.join(remotePath, folderName), progressStream);
+    await sftp.uploadDir(localPath, path.join(remotePath, folderName));
 
-    console.log('');
-    console.log(`Depoly completed 🚀🚀🚀! Folder size: ${formatBytes(stat.size)}. Time cost: ${Date.now() - startTimesStamp}ms`.green);
+    console.log(`\nDepoly completed 🚀🚀🚀! Folder size: ${formatBytes(folderSizeBytes)}. Time cost: ${Date.now() - startTimesStamp}ms`.green);
+    // 结束终端
+    process.exit();
   } catch (err) {
     console.error(`Upload failed: `.red, err);
   } finally {

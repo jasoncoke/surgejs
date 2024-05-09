@@ -21,6 +21,22 @@ function formatNumber(number) {
   return formattedInteger + formattedDecimal;
 }
 
+function getFolderSize(folderPath) {
+  let totalSize = 0;
+  const files = fs.readdirSync(folderPath);
+  files.forEach(file => {
+    const filePath = path.join(folderPath, file);
+    const stats = fs.statSync(filePath);
+    if (stats.isDirectory()) {
+      totalSize += getFolderSize(filePath);
+    } else {
+      // 如果是文件，则累加其大小
+      totalSize += stats.size;
+    }
+  });
+  return totalSize;
+};
+
 function formatBytes(bytes, decimals = 2) {
   if (bytes === 0) return '0 Bytes';
   const k = 1024;
@@ -61,9 +77,12 @@ function writeJsonFile(fileName, key, value) {
   }
 }
 
+
+
 module.exports = {
   getFormatDate,
   formatNumber,
+  getFolderSize,
   formatBytes,
 
   displayOptions,
