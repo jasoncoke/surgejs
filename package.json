@@ -1,6 +1,6 @@
 {
   "name": "surgejs",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "Quickly deploy front-end projects and support the configuration of multiple servers and projects.",
   "main": "index.js",
   "bin": {
@@ -8,9 +8,14 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node index.js"
+    "dev": "node index.js",
+    "postinstall": "node postinstall.js"
   },
-  "keywords": [],
+  "keywords": [
+    "surgejs",
+    "surge",
+    "sur"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {

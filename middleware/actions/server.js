@@ -2,7 +2,7 @@ require('colors');
 const inquirer = require('inquirer');
 
 const { getFormatDate, readJsonFile, writeJsonFile } = require('../helper');
-const { readEnvFile } = require('../env');
+const { readEnvFile, writeEnvFile } = require('../env');
 
 module.exports = class Server {
   constructor() {
@@ -25,6 +25,11 @@ module.exports = class Server {
     const params = {
       ...this.configs,
       created_time: this.created_time
+    }
+
+    // 保存至 env
+    if (readEnvFile().SSH_PRIVATE_KEY_PATH && params.connectMethod === 2) {
+      writeEnvFile('SSH_PRIVATE_KEY_PATH', params.privateKeyPath);
     }
 
     this.activeServer = params;
