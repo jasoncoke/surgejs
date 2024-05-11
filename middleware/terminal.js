@@ -1,15 +1,12 @@
-require('colors');
+// This is the terminal command collection file
 const { program } = require('commander');
-const Table = require('cli-table3');
 
 const Deploy = require('./actions/deploy');
 const Show = require('./actions/show');
 const Server = require('./actions/server');
 
 const { readEnvFile, writeEnvFile } = require('./env');
-const { displayOptions, getFormatDate, readJsonFile, writeJsonFile } = require('./helper');
 
-// 终端命令集合
 module.exports = {
   'config': {
     description: 'Configuration variables',

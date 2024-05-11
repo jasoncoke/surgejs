@@ -1,9 +1,8 @@
-require('colors');
 const fs = require('fs');
 const path = require('path');
 const inquirer = require('inquirer');
 
-const Server = require('./server')
+const Server = require('./server');
 const deploySftp = require('../sftp');
 const { readJsonFile, writeJsonFile } = require('../helper');
 
@@ -26,7 +25,10 @@ async function inputDeployConfig() {
 
   const server = new Server();
   if (server.list.length === 0) {
-    console.log('You do not have any optional servers, please add first.'.yellow);
+    new Print({
+      message: 'You do not have any optional servers, please add first.',
+      type: 'warnning',
+    })
     await server.add()
   } else {
     await server.select()
@@ -69,10 +71,16 @@ module.exports = class Deploy {
   deploy() {
     const currentProject = this.list.find(project => project.rootPath === this.configs.rootPath)
     if (!currentProject) {
-      console.log('Project not found'.bgRed, `Please use 'surgejs deploy init' to initialize the current project`.magenta);
+      new Print({
+        message: 'Project not found! Please use [ surgejs deploy init ] to initialize the current project.',
+        type: 'error',
+      })
     } else {
       const server = new Server().getServerByHost(currentProject.host);
-      console.log(` Deploying project to ${server.name || server.host}... `.bgGreen);
+      new Print({
+        message: `\nDeploying project to ${server.name || server.host}...`,
+        type: 'info',
+      })
 
       deploySftp({
         localPath: currentProject.localPath,

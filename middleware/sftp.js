@@ -1,5 +1,3 @@
-require('colors');
-
 const fs = require('fs');
 const path = require('path');
 const SftpClient = require('ssh2-sftp-client');
@@ -34,11 +32,13 @@ module.exports = async function deploySftp({ localPath, remotePath, sftpConfig }
     // 上传文件
     await sftp.uploadDir(localPath, path.join(remotePath, folderName));
 
-    console.log(`\nDepoly completed 🚀🚀🚀! Folder size: ${formatBytes(folderSizeBytes)}. Time cost: ${Date.now() - startTimesStamp}ms`.green);
-    // 结束终端
+    new Print({
+      message: '\nDepoly completed 🚀🚀🚀! Folder size: ${formatBytes(folderSizeBytes)}. Time cost: ${Date.now() - startTimesStamp}ms',
+      type: 'success'
+    })
     process.exit();
   } catch (err) {
-    console.error(`Upload failed: `.red, err);
+    console.error(`Upload failed: `, err);
   } finally {
     // 关闭 SFTP 连接
     await sftp.end();

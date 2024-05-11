@@ -1,4 +1,3 @@
-require('colors');
 const inquirer = require('inquirer');
 
 const { getFormatDate, readJsonFile, writeJsonFile } = require('../helper');
@@ -43,16 +42,25 @@ module.exports = class Server {
 
   remove(value) {
     if (!value) {
-      return console.log('Please input server host or server name'.bgRed);
+      return new Print({
+        message: 'Please input server host or server name',
+        type: 'error'
+      })
     }
 
     const server = this.list.find(server => server.name === value || server.host === value)
     if (!server) {
-      console.log(`Server not found`.bgRed, `You can use 'surgejs show servers' to view all servers`);
+      new Print({
+        message: 'Server not found! You can use [ surgejs show servers ] to view all servers',
+        type: 'error'
+      })
     } else {
       this.list = this.list.filter(item => item.host !== server.host)
-      console.log(`Server 「 ${value} 」 removed`.green);
-      this.write();
+      this.write()
+      new Print({
+        message: 'Server「 ${value} 」 removed successfully!',
+        type: 'success'
+      })
     }
   }
 
