@@ -33,7 +33,7 @@ module.exports = async function deploySftp({ localPath, remotePath, sftpConfig }
     await sftp.uploadDir(localPath, path.join(remotePath, folderName));
 
     new Print({
-      message: '\nDepoly completed 🚀🚀🚀! Folder size: ${formatBytes(folderSizeBytes)}. Time cost: ${Date.now() - startTimesStamp}ms',
+      message: `\nDepoly completed 🚀🚀🚀! Folder size: ${formatBytes(folderSizeBytes)}. Time cost: ${Date.now() - startTimesStamp}ms`,
       type: 'success'
     })
     process.exit();
