@@ -53,8 +53,9 @@ module.exports = {
   'show': {
     description: 'Diaplay something',
     options: [
-      ['servers', 'Show all servers']
-      ['configs', 'Show all configs']
+      ['-server', 'Show all servers'],
+      ['-product', 'Show all configs'],
+      ['-config', 'Show all configs'],
     ],
     action: (args, options) => {
       const show = new Show();

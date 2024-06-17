@@ -48,3 +48,11 @@ If you are deploying the current project for the first time, please use `surgejs
 After the initialization is successful, you can use `surgejs deploy` to deploy your project.
 
 > All configuration items can be found in the configuration file in the root directory of the package.
+
+
+
+#### Future plan
+
+- [ ] Compatible with Amazon S3
+- [ ] Improve terminal commands
+
