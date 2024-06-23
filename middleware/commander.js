@@ -18,8 +18,10 @@ Object.entries(terminal).forEach(([key, value]) => {
   }
 });
 
-program.version(package.version, '-v, --version', 'output the current version');
-program.usage(`[command] [options]`)
+program.name(package.name)
+  .version(package.version, '-v, -V,--version', 'output the current version')
+  .usage(`[command] [options]`)
+  .description(package.description.cyan)
 
 program.action((args, options) => {
   if (options.args.length === 0) {

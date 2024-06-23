@@ -1,5 +1,6 @@
 // This is the terminal command collection file
 const { program } = require('commander');
+const path = require('path');
 
 const Deploy = require('./actions/deploy');
 const Show = require('./actions/show');
@@ -9,18 +10,21 @@ const { readEnvFile, writeEnvFile } = require('./env');
 
 module.exports = {
   'config': {
-    description: 'Configuration variables',
+    description: 'Configuration variables' + `\nYou can also edit the configuration files directly in ${path.dirname(require.main.filename)}/`.brightYellow,
     options: [
+      ['<key> <value>', 'Set env by key value'],
       ['-l, --list', 'List current configuration items'],
-      ['--set <key> [value]', 'Set env by key [value]'],
-      ['keys', 'Get invalid keys']
     ],
     action: (args, options) => {
-      if (typeof args.list === "boolean" && args.list) {
-        Object.entries(readEnvFile()).forEach(([key, value]) => {
-          console.log(`${key}:${value}`.green);
-        });
-      }
+      // if (options.args.length === 0) {
+      //   log.info('Configuration variables'.green);
+      // }
+
+      // if (typeof args.list === "boolean" && args.list) {
+      //   Object.entries(readEnvFile()).forEach(([key, value]) => {
+      //     console.log(`${key}:${value}`.green);
+      //   });
+      // }
 
       if (args.set) {
         const keys = Object.keys(readEnvFile());
@@ -67,15 +71,21 @@ module.exports = {
   'server': {
     description: 'Add, delete, modify and check the saved server list',
     options: [
-      ['add', 'Add new server'],
-      ['remove <server_host | server_name>', 'Remove a server']
+      ['-l', 'Show all servers'],
+      ['cr, create', 'Add new server'],
+      ['rm, remove <server_host | server_name>', 'Remove a server'],
+      ['edt, edit <server_host | server_name>', 'Remove a server']
     ],
     action: (args, options) => {
       const server = new Server();
-      if (options.args[0] === 'add') {
-        server.add()
-      } else if (options.args[0] === 'remove') {
+      if (args.list) {
+        server.getServerList()
+      } else if (['cr', 'create'].includes(options.args[0])) {
+        server.create()
+      } else if (['rm', 'remove'].includes(options.args[0])) {
         server.remove(options.args[1])
+      } else if (['edt', 'edit'].includes(options.args[0])) {
+        server.edit(options.args[1])
       }
     }
   }

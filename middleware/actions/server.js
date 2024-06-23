@@ -1,4 +1,6 @@
 const inquirer = require('inquirer');
+const Table = require('cli-table3');
+const path = require('path');
 
 const { getFormatDate, readJsonFile, writeJsonFile } = require('../helper');
 const { readEnvFile, writeEnvFile } = require('../env');
@@ -15,7 +17,7 @@ module.exports = class Server {
     this.activeServer = null;
   }
 
-  async add() {
+  async create() {
     this.configs = await this.inputServerConfig(this.list);
     this.save();
   }
@@ -64,6 +66,26 @@ module.exports = class Server {
     }
   }
 
+  // TODO
+  edit(value) {
+    if (!value) {
+      return new Print({
+        message: 'Please input server host or server name',
+        type: 'error'
+      })
+    }
+
+    const server = this.list.find(server => server.name === value || server.host === value)
+    if (!server) {
+      new Print({
+        message: 'Server not found! You can use [ surgejs server -l ] to view all servers',
+        type: 'error'
+      })
+    } else {
+      console.log('Features under development...');
+    }
+  }
+
   async select(rl) {
     const questions = [
       {
@@ -91,6 +113,18 @@ module.exports = class Server {
 
   getServerByHost(host) {
     return this.list.find(server => server.host === host);
+  }
+
+  getServerList() {
+    const table = new Table({
+      head: ['name', 'username', 'host', 'created_time']
+    });
+    this.list.forEach(server => {
+      table.push([server.name, server.username, server.host, server.created_time]);
+    })
+
+    console.log(table.toString());
+    console.log(`You can view more configuration content in ${path.dirname(require.main.filename)}/config.json`.brightYellow);
   }
 
   async inputServerConfig(list) {
