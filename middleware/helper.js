@@ -77,7 +77,14 @@ function writeJsonFile(fileName, key, value) {
   }
 }
 
-
+function isDirectory(path) {
+  try {
+    const stats = fs.statSync(path);
+    return stats.isDirectory();
+  } catch (error) {
+    return false;
+  }
+}
 
 module.exports = {
   getFormatDate,
@@ -88,5 +95,7 @@ module.exports = {
   displayOptions,
 
   readJsonFile,
-  writeJsonFile
+  writeJsonFile,
+
+  isDirectory
 }

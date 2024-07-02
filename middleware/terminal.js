@@ -5,6 +5,7 @@ const path = require('path');
 const Deploy = require('./actions/deploy');
 const Show = require('./actions/show');
 const Server = require('./actions/server');
+const AwsS3 = require('./aws-s3');
 
 const { readEnvFile, writeEnvFile } = require('./env');
 
@@ -86,6 +87,18 @@ module.exports = {
         server.remove(options.args[1])
       } else if (['edt', 'edit'].includes(options.args[0])) {
         server.edit(options.args[1])
+      }
+    }
+  },
+  's3': {
+    description: 'Enabling streamlined deployment and management of applications using Amazon S3',
+    options: [
+      ['mv', 'Move local files to S3'],
+    ],
+    action: (args, options) => {
+      const awsS3 = new AwsS3()
+      if (['mv'].includes(options.args[0])) {
+        awsS3.moveFilesToBucket()
       }
     }
   }
