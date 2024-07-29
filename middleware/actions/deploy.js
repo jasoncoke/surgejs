@@ -58,15 +58,30 @@ module.exports = class Deploy {
       localPath: path.resolve(this.configs.rootPath, configs.folderName)
     }
 
-    this.list.push(this.configs)
+    this.upsert()
     this.save()
   }
 
+  /**
+   * Save the configuration list to a file
+   */
   save() {
     writeJsonFile('config', this.CONFIG_KEY, this.list)
   }
 
   clean() { }
+
+  /**
+   * Update or insert configuration information
+   */
+  upsert() {
+    const data = this.list.find(project => project.rootPath === this.configs.rootPath)
+    if (data) {
+      Object.assign(data, this.configs)
+    } else {
+      this.list.push(this.configs)
+    }
+  }
 
   deploy() {
     const currentProject = this.list.find(project => project.rootPath === this.configs.rootPath)
