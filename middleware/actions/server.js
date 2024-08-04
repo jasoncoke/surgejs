@@ -44,43 +44,28 @@ module.exports = class Server {
 
   remove(value) {
     if (!value) {
-      return new Print({
-        message: 'Please input server host or server name',
-        type: 'error'
-      })
+      return $message.error('Please input server host or server name')
     }
 
     const server = this.list.find(server => server.name === value || server.host === value)
     if (!server) {
-      new Print({
-        message: 'Server not found! You can use [ surgejs show servers ] to view all servers',
-        type: 'error'
-      })
+      $message.error('Server not found! You can use [ surgejs show servers ] to view all servers')
     } else {
       this.list = this.list.filter(item => item.host !== server.host)
       this.write()
-      new Print({
-        message: 'Server「 ${value} 」 removed successfully!',
-        type: 'success'
-      })
+      $message.success(`Server「 ${value} 」 removed successfully!`)
     }
   }
 
   // TODO
   edit(value) {
     if (!value) {
-      return new Print({
-        message: 'Please input server host or server name',
-        type: 'error'
-      })
+      $message.error('Please input server host or server name')
     }
 
     const server = this.list.find(server => server.name === value || server.host === value)
     if (!server) {
-      new Print({
-        message: 'Server not found! You can use [ surgejs server -l ] to view all servers',
-        type: 'error'
-      })
+      $message.error('Server not found! You can use [ surgejs show servers ] to view all servers')
     } else {
       console.log('Features under development...');
     }

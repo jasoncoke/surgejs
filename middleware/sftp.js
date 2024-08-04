@@ -32,13 +32,10 @@ module.exports = async function deploySftp({ localPath, remotePath, sftpConfig }
     // 上传文件
     await sftp.uploadDir(localPath, path.join(remotePath, folderName));
 
-    new Print({
-      message: `\nDepoly completed 🚀🚀🚀! Folder size: ${formatBytes(folderSizeBytes)}. Time cost: ${Date.now() - startTimesStamp}ms`,
-      type: 'success'
-    })
+    $message.success(`Deploy success! Folder size: ${formatBytes(folderSizeBytes)}. Time cost: ${Date.now() - startTimesStamp}ms`)
     process.exit();
   } catch (err) {
-    console.error(`Upload failed: `, err);
+    $message.error(`Upload failed: ${err.message}`)
   } finally {
     // 关闭 SFTP 连接
     await sftp.end();

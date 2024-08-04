@@ -25,10 +25,7 @@ async function inputDeployConfig() {
 
   const server = new Server();
   if (server.list.length === 0) {
-    new Print({
-      message: 'You do not have any optional servers, please add first.',
-      type: 'warnning',
-    })
+    $message.warning('No servers found, please add first.')
     await server.add()
   } else {
     await server.select()
@@ -86,16 +83,10 @@ module.exports = class Deploy {
   deploy() {
     const currentProject = this.list.find(project => project.rootPath === this.configs.rootPath)
     if (!currentProject) {
-      new Print({
-        message: 'Project not found! Please use [ surgejs deploy init ] to initialize the current project.',
-        type: 'error',
-      })
+      $message.error('Project not found! Please use [ surgejs deploy init ] to initialize the current project.')
     } else {
       const server = new Server().getServerByHost(currentProject.host);
-      new Print({
-        message: `\nDeploying project to ${server.name || server.host}...`,
-        type: 'info',
-      })
+      $message.info(`Deploying project to ${server.name || server.host}...`)
 
       deploySftp({
         localPath: currentProject.localPath,

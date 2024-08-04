@@ -14,6 +14,6 @@ module.exports = class Show {
       table.push([server.name, server.host, server.created_time]);
     })
 
-    new Print(table.toString())
+    console.log(table.toString());
   }
 }
