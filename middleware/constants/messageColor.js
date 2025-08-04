@@ -1,4 +1,4 @@
-module.export.WHITE = 'white'
-module.export.GREEN = 'green'
-module.export.RED = 'red'
-module.export.YELLOW = 'yellow'
+module.exports.WHITE = 'white'
+module.exports.GREEN = 'green'
+module.exports.RED = 'red'
+module.exports.YELLOW = 'yellow'

@@ -1,4 +1,4 @@
-module.export.INFO = 'info'
-module.export.WARNING = 'warning'
-module.export.ERROR = 'error'
-module.export.SUCCESS = 'success'
+module.exports.INFO = 'info'
+module.exports.WARNING = 'warning'
+module.exports.ERROR = 'error'
+module.exports.SUCCESS = 'success'
