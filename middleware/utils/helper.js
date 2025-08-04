@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-function getFormatDate(date = new Date()) {
+module.export.getFormatDate = function (date = new Date()) {
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   const year = date.getFullYear();
@@ -12,7 +12,7 @@ function getFormatDate(date = new Date()) {
   return `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`;
 }
 
-function formatNumber(number) {
+module.export.formatNumber = function (number) {
   const numStr = String(number);
   const [integerPart, decimalPart] = numStr.split('.');
   const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -21,7 +21,7 @@ function formatNumber(number) {
   return formattedInteger + formattedDecimal;
 }
 
-function getFolderSize(folderPath) {
+module.export.getFolderSize = function (folderPath) {
   let totalSize = 0;
   const files = fs.readdirSync(folderPath);
   files.forEach(file => {
@@ -37,7 +37,7 @@ function getFolderSize(folderPath) {
   return totalSize;
 }
 
-function formatBytes(bytes, decimals = 2) {
+module.export.formatBytes = function (bytes, decimals = 2) {
   if (bytes === 0) return '0 Bytes';
   const k = 1024;
   const dm = decimals < 0 ? 0 : decimals;
@@ -47,13 +47,13 @@ function formatBytes(bytes, decimals = 2) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
-function displayOptions(options, selectedIndex) {
+module.export.displayOptions = function (options, selectedIndex) {
   options.forEach((option, index) => {
     console.log(`${index === selectedIndex ? `* ${option.label}`.green : `  ${option.label}`} `);
   });
 }
 
-function readJsonFile(fileName) {
+module.export.readJsonFile = function (fileName) {
   try {
     const data = fs.readFileSync(path.resolve(__dirname, '..', `${fileName}.json`), 'utf8');
     return JSON.parse(data);
@@ -62,7 +62,7 @@ function readJsonFile(fileName) {
   }
 }
 
-function writeJsonFile(fileName, key, value) {
+module.export.writeJsonFile = function (fileName, key, value) {
   try {
     const data = readJsonFile(fileName);
     if (value) {
@@ -77,25 +77,11 @@ function writeJsonFile(fileName, key, value) {
   }
 }
 
-function isDirectory(path) {
+module.export.isDirectory = function (path) {
   try {
     const stats = fs.statSync(path);
     return stats.isDirectory();
   } catch (error) {
     return false;
   }
-}
-
-module.exports = {
-  getFormatDate,
-  formatNumber,
-  getFolderSize,
-  formatBytes,
-
-  displayOptions,
-
-  readJsonFile,
-  writeJsonFile,
-
-  isDirectory
 }

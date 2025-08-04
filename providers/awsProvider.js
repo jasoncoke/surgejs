@@ -2,8 +2,8 @@ const { S3, PutObjectCommand } = require("@aws-sdk/client-s3");
 const ora = require('ora');
 const path = require('path');
 const { readdirSync, readFileSync, writeFileSync, existsSync } = require("fs");
-const { isDirectory } = require('./helper');
-const { SURGEJS_CONFIG } = require('./config');
+const { isDirectory } = require('../middleware/utils/helper');
+const { SURGEJS_CONFIG } = require('../middleware/config');
 
 const processPath = process.cwd();
 

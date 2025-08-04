@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 require('colors');
-require('./middleware/utils/message');
+require('./middleware/global/message');
 require('./middleware/commander');

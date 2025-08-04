@@ -2,9 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const inquirer = require('inquirer');
 
+const ValidationException = require('../exceptions/ValidationException');
 const Server = require('./server');
-const deploySftp = require('../sftp');
-const { readJsonFile, writeJsonFile } = require('../helper');
+const deploySftp = require('../../providers/sftpProvider');
+const { readJsonFile, writeJsonFile } = require('../utils/helper');
 
 async function inputDeployConfig() {
   const questions = [
@@ -83,7 +84,7 @@ module.exports = class Deploy {
   deploy() {
     const currentProject = this.list.find(project => project.rootPath === this.configs.rootPath)
     if (!currentProject) {
-      $message.error('Project not found! Please use [ surgejs deploy init ] to initialize the current project.')
+      ValidationException.throw('Deploy failed', 'Project not found! Please use [ surgejs deploy init ] to initialize the current project.')
     } else {
       const server = new Server().getServerByHost(currentProject.host);
       $message.info(`Deploying project to ${server.name || server.host}...`)

@@ -1,9 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 const SftpClient = require('ssh2-sftp-client');
-const ProgressBar = require('./progressBar');
+const ProgressBar = require('../components/console/ProgressBar');
 
-const { getFolderSize, formatBytes } = require('./helper');
+const ValidationException = require('../middleware/exceptions/ValidationException');
+const { getFolderSize, formatBytes } = require('../middleware/utils/helper');
 
 module.exports = async function deploySftp({ localPath, remotePath, sftpConfig }) {
   const sftp = new SftpClient();
@@ -35,7 +36,7 @@ module.exports = async function deploySftp({ localPath, remotePath, sftpConfig }
     $message.success(`Deploy success! Folder size: ${formatBytes(folderSizeBytes)}. Time cost: ${Date.now() - startTimesStamp}ms`)
     process.exit();
   } catch (err) {
-    $message.error(`Upload failed: ${err.message}`)
+    ValidationException.throw('Upload failed', err.message)
   } finally {
     // 关闭 SFTP 连接
     await sftp.end();

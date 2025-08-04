@@ -1,5 +1,5 @@
 const Table = require('cli-table3');
-const { readJsonFile, writeJsonFile } = require('../helper');
+const { readJsonFile, writeJsonFile } = require('../utils/helper');
 
 module.exports = class Show {
   constructor() {

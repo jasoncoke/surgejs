@@ -2,8 +2,9 @@ const inquirer = require('inquirer');
 const Table = require('cli-table3');
 const path = require('path');
 
-const { getFormatDate, readJsonFile, writeJsonFile } = require('../helper');
-const { readEnvFile, writeEnvFile } = require('../env');
+const ValidationException = require('../exceptions/ValidationException');
+const { getFormatDate, readJsonFile, writeJsonFile } = require('../utils/helper');
+const { readEnvFile, writeEnvFile } = require('../../providers/envProvider');
 
 module.exports = class Server {
   constructor() {
@@ -44,12 +45,12 @@ module.exports = class Server {
 
   remove(value) {
     if (!value) {
-      return $message.error('Please input server host or server name')
+      ValidationException.throw('Serve remove failed', 'Please input server host or server name')
     }
 
     const server = this.list.find(server => server.name === value || server.host === value)
     if (!server) {
-      $message.error('Server not found! You can use [ surgejs show servers ] to view all servers')
+      ValidationException.throw('Serve remove failed', 'Server not found! You can use [ surgejs show servers ] to view all servers')
     } else {
       this.list = this.list.filter(item => item.host !== server.host)
       this.write()
@@ -60,12 +61,12 @@ module.exports = class Server {
   // TODO
   edit(value) {
     if (!value) {
-      $message.error('Please input server host or server name')
+      ValidationException.throw('Serve edit failed', 'Please input server host or server name')
     }
 
     const server = this.list.find(server => server.name === value || server.host === value)
     if (!server) {
-      $message.error('Server not found! You can use [ surgejs show servers ] to view all servers')
+      ValidationException.throw('Serve edit failed', 'Server not found! You can use [ surgejs show servers ] to view all server')
     } else {
       console.log('Features under development...');
     }
