@@ -3,4 +3,4 @@
 /**
  * ssh private key path
  */
-module.exports.SSH_PRIVATE_KEY_PATH = 'SSH_PRIVATE_KEY_PATH'
+module.exports.SSH_PRIVATE_KEY_PATH = 'SSH_PRIVATE_KEY_PATH';

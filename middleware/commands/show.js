@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const Show = require('../actions/ShowAction');
 
@@ -7,7 +7,7 @@ module.exports = {
   options: [
     ['-server', 'Show all servers'],
     ['-product', 'Show all configs'],
-    ['-config', 'Show all configs'],
+    ['-config', 'Show all configs']
   ],
   action: (args, options) => {
     const show = new Show();
@@ -15,4 +15,4 @@ module.exports = {
       show.getServerList();
     }
   }
-}
+};

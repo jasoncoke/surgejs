@@ -1,15 +1,15 @@
-"use strict";
+'use strict';
 
 // This is the callback after installing this package
 const fs = require('fs');
 const path = require('path');
+const { SURGEJS_CONFIG_JSON_FILENAME } = require('./middleware/config');
 
 function createFile(fileName, content, filePath = path.resolve(__dirname, fileName)) {
   if (!fs.existsSync(filePath)) {
-    fs.writeFileSync(fileName, content)
+    fs.writeFileSync(fileName, content);
   }
 }
 
 // Create necessary files
-createFile('.env', '')
-createFile('config.json', '{}')
+createFile(SURGEJS_CONFIG_JSON_FILENAME, '{}');

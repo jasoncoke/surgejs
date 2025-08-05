@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-const { S3, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { S3, PutObjectCommand } = require('@aws-sdk/client-s3');
 const ora = require('ora');
 const path = require('path');
-const { readdirSync, readFileSync, writeFileSync, existsSync } = require("fs");
+const { readdirSync, readFileSync, writeFileSync, existsSync } = require('fs');
 const { isDirectory } = require('../middleware/utils/helper');
 const { SURGEJS_CONFIG } = require('../middleware/config');
 
@@ -15,7 +15,7 @@ function getAwsParams() {
     return JSON.parse(data);
   }
 
-  return {}
+  return {};
 }
 
 function getAwsFiles(folderPath, preFolderPath = '') {
@@ -24,12 +24,12 @@ function getAwsFiles(folderPath, preFolderPath = '') {
   return keys.flatMap((key) => {
     const filePath = `${folderPath}/${key}`;
     if (isDirectory(filePath)) {
-      return getAwsFiles(filePath, folderPath)
+      return getAwsFiles(filePath, folderPath);
     } else {
       const fileContent = readFileSync(filePath);
       return {
         Key: preFolderPath ? `${path.basename(folderPath)}/${key}` : key,
-        Body: fileContent,
+        Body: fileContent
       };
     }
   });
@@ -61,26 +61,28 @@ module.exports = class AwsS3Client {
     if (keepFolder) {
       const parentFolderName = path.basename(folderPath);
       files.forEach((file) => {
-        file.Key = `${parentFolderName}/${file.Key}`
+        file.Key = `${parentFolderName}/${file.Key}`;
       });
     }
 
     const totalCount = files.length;
     let uploadedCount = 0;
     const spinner = ora('').start();
-    await Promise.all(files.map(async (file) => {
-      spinner.text = `uploading ${file.Key}  ${uploadedCount}/${totalCount}}`;
-      await this.client.send(
-        new PutObjectCommand({
-          Bucket: bucketName,
-          Body: file.Body,
-          Key: file.Key,
-        }),
-      );
-      uploadedCount++;
-    }))
+    await Promise.all(
+      files.map(async (file) => {
+        spinner.text = `uploading ${file.Key}  ${uploadedCount}/${totalCount}}`;
+        await this.client.send(
+          new PutObjectCommand({
+            Bucket: bucketName,
+            Body: file.Body,
+            Key: file.Key
+          })
+        );
+        uploadedCount++;
+      })
+    );
 
     spinner.succeed(`uploaded ${uploadedCount}/${totalCount} files`);
-    spinner.clear()
+    spinner.clear();
   }
-}
+};

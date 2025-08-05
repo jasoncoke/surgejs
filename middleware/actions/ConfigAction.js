@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 module.exports = class Config {
   constructor() {
@@ -9,4 +9,4 @@ module.exports = class Config {
       rootPath: process.cwd()
     };
   }
-}
+};

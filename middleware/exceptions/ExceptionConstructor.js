@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
 module.exports = class ExceptionConstructor {
   /**
-   * 
-   * @param {string} channel 
-   * @param {string} message 
-   * @param {number} code 
+   *
+   * @param {string} channel
+   * @param {string} message
+   * @param {number} code
    */
   constructor(channel, message, code = 1) {
     this.channel = channel;
@@ -31,13 +31,13 @@ module.exports = class ExceptionConstructor {
 
   output() {
     const message = `${this.channel}: ${this.message}`;
-    const traces = this.getTracesAsString()
+    const traces = this.getTracesAsString();
 
     console.log(message.red + '\n' + traces.yellow);
-    this.exit()
+    this.exit();
   }
 
   exit() {
     process.exit(this.code);
   }
-}
+};

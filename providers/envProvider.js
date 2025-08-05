@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // This is env file help
 const fs = require('fs');
@@ -7,14 +7,14 @@ const path = require('path');
 const envFilePath = path.resolve(__dirname, '..', '.env');
 /**
  * Function to read the .env file
- * 
+ *
  * @returns {Object} An object containing key-value pairs of environment variables. If the read fails, an empty object is returned.
  */
 function readEnvFile() {
   try {
     const data = fs.readFileSync(envFilePath, 'utf8');
     const envVariables = {};
-    data.split('\n').forEach(line => {
+    data.split('\n').forEach((line) => {
       if (line) {
         const [key, value] = line.split('=');
         envVariables[key.trim()] = value.trim();
@@ -56,8 +56,8 @@ function writeEnvFile(key, value) {
 
 /**
  * Get the value of the specified key in the env file
- * @param {string} key 
- * @returns 
+ * @param {string} key
+ * @returns
  */
 function getEnvValue(key) {
   const envVariables = readEnvFile();

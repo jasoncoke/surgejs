@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const Reset = require('../actions/ResetAction');
 
@@ -14,4 +14,4 @@ module.exports = {
     console.log('target output >>> args', args);
     new Reset(args, options);
   }
-}
+};

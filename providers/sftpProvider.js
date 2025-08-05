@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const fs = require('fs');
 const path = require('path');
@@ -12,7 +12,7 @@ module.exports = async function deploySftp({ localPath, remotePath, sftpConfig }
   const sftp = new SftpClient();
   try {
     const startTimesStamp = Date.now();
-    const folderSizeBytes = getFolderSize(localPath)
+    const folderSizeBytes = getFolderSize(localPath);
     const folderName = path.basename(localPath);
     let remoteSize = 0;
 
@@ -20,27 +20,29 @@ module.exports = async function deploySftp({ localPath, remotePath, sftpConfig }
     await sftp.connect(sftpConfig);
 
     const progressBar = new ProgressBar({
-      total: folderSizeBytes,
-    })
+      total: folderSizeBytes
+    });
     setInterval(() => {
       progressBar.current += 100;
     }, 100);
 
-    sftp.on('upload', info => {
+    sftp.on('upload', (info) => {
       const file = fs.statSync(info.source);
-      remoteSize += file.size
+      remoteSize += file.size;
       progressBar.current = remoteSize;
     });
 
     // 上传文件
     await sftp.uploadDir(localPath, path.join(remotePath, folderName));
 
-    $message.success(`Deploy success! Folder size: ${formatBytes(folderSizeBytes)}. Time cost: ${Date.now() - startTimesStamp}ms`)
+    $message.success(
+      `Deploy success! Folder size: ${formatBytes(folderSizeBytes)}. Time cost: ${Date.now() - startTimesStamp}ms`
+    );
     process.exit();
   } catch (err) {
-    ValidationException.throw('Upload failed', err.message)
+    ValidationException.throw('Upload failed', err.message);
   } finally {
     // 关闭 SFTP 连接
     await sftp.end();
   }
-}
+};

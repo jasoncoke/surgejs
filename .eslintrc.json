@@ -1,0 +1,24 @@
+{
+    "extends": [
+        "eslint:recommended",
+        "plugin:prettier/recommended"
+    ],
+    "rules": {
+        "indent": [
+            "error",
+            2
+        ], // 2空格缩进
+        "quotes": [
+            "error",
+            "single"
+        ], // 单引号
+        "semi": [
+            "error",
+            "always"
+        ] // 强制分号
+    },
+    "env": {
+        "node": true,
+        "es2021": true
+    }
+}

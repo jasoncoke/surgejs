@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const inquirer = require('inquirer');
 const Table = require('cli-table3');
@@ -13,7 +13,7 @@ module.exports = class Server {
   constructor() {
     const timestamp = new Date();
 
-    this.created_time = getFormatDate(timestamp)
+    this.created_time = getFormatDate(timestamp);
 
     this.CONFIG_KEY = 'servers';
     this.list = readJsonFile('config')[this.CONFIG_KEY] || [];
@@ -30,7 +30,7 @@ module.exports = class Server {
     const params = {
       ...this.configs,
       created_time: this.created_time
-    }
+    };
 
     // 保存至 env
     if (getEnvValue(SSH_PRIVATE_KEY_PATH) && params.connectMethod === 2) {
@@ -38,38 +38,44 @@ module.exports = class Server {
     }
 
     this.activeServer = params;
-    this.list.push(params)
+    this.list.push(params);
     this.write();
   }
 
   write() {
-    writeJsonFile('config', this.CONFIG_KEY, this.list)
+    writeJsonFile('config', this.CONFIG_KEY, this.list);
   }
 
   remove(value) {
     if (!value) {
-      ValidationException.throw('Serve remove failed', 'Please input server host or server name')
+      ValidationException.throw('Serve remove failed', 'Please input server host or server name');
     }
 
-    const server = this.list.find(server => server.name === value || server.host === value)
+    const server = this.list.find((server) => server.name === value || server.host === value);
     if (!server) {
-      ValidationException.throw('Serve remove failed', 'Server not found! You can use [ surgejs show servers ] to view all servers')
+      ValidationException.throw(
+        'Serve remove failed',
+        'Server not found! You can use [ surgejs show servers ] to view all servers'
+      );
     } else {
-      this.list = this.list.filter(item => item.host !== server.host)
-      this.write()
-      $message.success(`Server「 ${value} 」 removed successfully!`)
+      this.list = this.list.filter((item) => item.host !== server.host);
+      this.write();
+      $message.success(`Server「 ${value} 」 removed successfully!`);
     }
   }
 
   // TODO
   edit(value) {
     if (!value) {
-      ValidationException.throw('Serve edit failed', 'Please input server host or server name')
+      ValidationException.throw('Serve edit failed', 'Please input server host or server name');
     }
 
-    const server = this.list.find(server => server.name === value || server.host === value)
+    const server = this.list.find((server) => server.name === value || server.host === value);
     if (!server) {
-      ValidationException.throw('Serve edit failed', 'Server not found! You can use [ surgejs show servers ] to view all server')
+      ValidationException.throw(
+        'Serve edit failed',
+        'Server not found! You can use [ surgejs show servers ] to view all server'
+      );
     } else {
       console.log('Features under development...');
     }
@@ -81,39 +87,44 @@ module.exports = class Server {
         type: 'list',
         name: 'selectServerHost',
         message: 'Select or add a server: ',
-        choices: this.list.map(server => ({
-          name: `${server.name} - ${server.host}`,
-          value: server.host
-        })).concat({
-          name: 'Add new server',
-          value: 'add'
-        })
+        choices: this.list
+          .map((server) => ({
+            name: `${server.name} - ${server.host}`,
+            value: server.host
+          }))
+          .concat({
+            name: 'Add new server',
+            value: 'add'
+          })
       }
-    ]
+    ];
 
-    const { selectServerHost } = await inquirer.prompt(questions)
+    const { selectServerHost } = await inquirer.prompt(questions);
 
     if (selectServerHost === 'add') {
-      await this.add()
+      await this.add();
     } else {
-      this.activeServer = this.list.find(server => server.host === selectServerHost);
+      this.activeServer = this.list.find((server) => server.host === selectServerHost);
     }
   }
 
   getServerByHost(host) {
-    return this.list.find(server => server.host === host);
+    return this.list.find((server) => server.host === host);
   }
 
   getServerList() {
     const table = new Table({
       head: ['name', 'username', 'host', 'created_time']
     });
-    this.list.forEach(server => {
+    this.list.forEach((server) => {
       table.push([server.name, server.username, server.host, server.created_time]);
-    })
+    });
 
     console.log(table.toString());
-    console.log(`You can view more configuration content in ${path.dirname(require.main.filename)}/config.json`.brightYellow);
+    console.log(
+      `You can view more configuration content in ${path.dirname(require.main.filename)}/config.json`
+        .brightYellow
+    );
   }
 
   async inputServerConfig(list) {
@@ -123,19 +134,19 @@ module.exports = class Server {
         name: 'host',
         message: 'Host: ',
         validate(value) {
-          return list.find(server => server.host === value) ? 'Host already exists' : true;
+          return list.find((server) => server.host === value) ? 'Host already exists' : true;
         }
       },
       {
         type: 'input',
         name: 'port',
         default: 22,
-        message: 'Port (Default 22): ',
+        message: 'Port (Default 22): '
       },
       {
         type: 'input',
         name: 'username',
-        message: 'Username: ',
+        message: 'Username: '
       },
       {
         type: 'list',
@@ -148,7 +159,7 @@ module.exports = class Server {
       }
     ];
 
-    const answers = await inquirer.prompt(questions)
+    const answers = await inquirer.prompt(questions);
 
     const questionsNext = [
       {
@@ -156,31 +167,31 @@ module.exports = class Server {
         name: 'name',
         message: '[optional] You can give the current configuration a name: ',
         validate(value) {
-          return list.find(server => server.name === value) ? 'Server name already exists' : true;
+          return list.find((server) => server.name === value) ? 'Server name already exists' : true;
         }
       }
-    ]
+    ];
 
     if (answers.connectMethod === 1) {
       questionsNext.unshift({
         type: 'password',
         name: 'password',
-        message: 'Password: ',
-      })
+        message: 'Password: '
+      });
     } else if (answers.connectMethod === 2) {
       questionsNext.unshift({
         type: 'input',
         name: 'privateKeyPath',
         default: getEnvValue(SSH_PRIVATE_KEY_PATH) || '',
-        message: 'Private key path: ',
-      })
+        message: 'Private key path: '
+      });
     }
 
-    const answersNext = await inquirer.prompt(questionsNext)
+    const answersNext = await inquirer.prompt(questionsNext);
 
     return Promise.resolve({
       ...answers,
       ...answersNext
     });
   }
-}
+};

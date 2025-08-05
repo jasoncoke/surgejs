@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const Server = require('../actions/ServerAction');
 
@@ -13,13 +13,13 @@ module.exports = {
   action: (args, options) => {
     const server = new Server();
     if (args.list) {
-      server.getServerList()
+      server.getServerList();
     } else if (['cr', 'create'].includes(options.args[0])) {
-      server.create()
+      server.create();
     } else if (['rm', 'remove'].includes(options.args[0])) {
-      server.remove(options.args[1])
+      server.remove(options.args[1]);
     } else if (['edt', 'edit'].includes(options.args[0])) {
-      server.edit(options.args[1])
+      server.edit(options.args[1]);
     }
   }
-}
+};

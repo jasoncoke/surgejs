@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
 module.exports = class ProgressBar {
   constructor(options) {
     this.total = options.total;
     this.options = {
       barCount: 50,
-      ...options,
+      ...options
     };
     this.percent = 0;
     this.bar = '';
@@ -32,9 +32,10 @@ module.exports = class ProgressBar {
   get current() {
     return this._current;
   }
+
   set current(value) {
     this._current = value;
-    this.getProgressStr()
+    this.getProgressStr();
   }
 
   getProgressStr() {
@@ -46,7 +47,10 @@ module.exports = class ProgressBar {
 
     if (this.current <= this.total) {
       process.stdout.write('\x1B[2A\x1B[K');
-      console.log(`\n${this.barChar.repeat(progress) + progressStr.slice(progress)}`.brightGreen, `${this.current}/${this.total}`);
+      console.log(
+        `\n${this.barChar.repeat(progress) + progressStr.slice(progress)}`.brightGreen,
+        `${this.current}/${this.total}`
+      );
     }
   }
-}
+};
