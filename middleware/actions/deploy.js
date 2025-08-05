@@ -1,9 +1,11 @@
+"use strict";
+
 const fs = require('fs');
 const path = require('path');
 const inquirer = require('inquirer');
 
 const ValidationException = require('../exceptions/ValidationException');
-const Server = require('./server');
+const Server = require('./Server');
 const deploySftp = require('../../providers/sftpProvider');
 const { readJsonFile, writeJsonFile } = require('../utils/helper');
 

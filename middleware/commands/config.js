@@ -1,3 +1,5 @@
+"use strict";
+
 const { program } = require('commander');
 const path = require('path');
 const { getEnvKeys, writeEnvFile } = require('../../providers/envProvider');

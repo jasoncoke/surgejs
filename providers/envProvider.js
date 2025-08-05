@@ -1,3 +1,5 @@
+"use strict";
+
 // This is env file help
 const fs = require('fs');
 const path = require('path');

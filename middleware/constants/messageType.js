@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports.INFO = 'info'
 module.exports.WARNING = 'warning'
 module.exports.ERROR = 'error'

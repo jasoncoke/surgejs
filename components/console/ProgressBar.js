@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = class ProgressBar {
   constructor(options) {
     this.total = options.total;

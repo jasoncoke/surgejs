@@ -1,3 +1,5 @@
+"use strict";
+
 const inquirer = require('inquirer');
 const Table = require('cli-table3');
 const path = require('path');

@@ -1,3 +1,5 @@
+"use strict";
+
 const { S3, PutObjectCommand } = require("@aws-sdk/client-s3");
 const ora = require('ora');
 const path = require('path');

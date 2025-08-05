@@ -1,3 +1,5 @@
+"use strict";
+
 const AwsProvider = require('../../providers/awsProvider');
 
 module.exports = {

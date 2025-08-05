@@ -1,4 +1,4 @@
-# surgejs
+# surgejs - A rapid deployment tool
 
 This tool can help you quickly and easily deploy front-end tools as a terminal script command.
 
@@ -39,7 +39,7 @@ Commands:
   server [options]  Add, delete, modify and check the saved server list
 ```
 
-### Example
+### Examples
 
 For convenience, usually execute the command in the root directory of the project.
 
@@ -51,7 +51,7 @@ After the initialization is successful, you can use `surgejs deploy` to deploy y
 
 
 
-#### Future plan
+#### Future plans
 
 - [ ] Compatible with Amazon S3
 - [ ] Improve terminal commands

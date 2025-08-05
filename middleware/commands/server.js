@@ -1,4 +1,6 @@
-const Server = require('../actions/server');
+"use strict";
+
+const Server = require('../actions/Server');
 
 module.exports = {
   description: 'Add, delete, modify and check the saved server list',

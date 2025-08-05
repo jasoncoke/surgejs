@@ -1,3 +1,5 @@
+"use strict";
+
 const ExceptionConstructor = require("./ExceptionConstructor");
 
 module.exports = class ValidationException extends ExceptionConstructor {

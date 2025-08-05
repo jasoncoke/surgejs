@@ -1,3 +1,5 @@
+"use strict";
+
 const { INFO, WARNING, ERROR, SUCCESS } = require('../constants/messageType');
 const { WHITE, GREEN, RED, YELLOW } = require('../constants/messageColor');
 

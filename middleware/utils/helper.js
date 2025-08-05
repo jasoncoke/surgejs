@@ -1,3 +1,5 @@
+"use strict";
+
 const fs = require('fs');
 const path = require('path');
 
@@ -55,7 +57,7 @@ module.exports.displayOptions = function (options, selectedIndex) {
 
 module.exports.readJsonFile = function (fileName) {
   try {
-    const data = fs.readFileSync(path.resolve(__dirname, '..', `${fileName}.json`), 'utf8');
+    const data = fs.readFileSync(path.resolve(__dirname, '../..', `${fileName}.json`), 'utf8');
     return JSON.parse(data);
   } catch (error) {
     console.log(error);
@@ -71,7 +73,7 @@ module.exports.writeJsonFile = function (fileName, key, value) {
       delete data[key];
     }
 
-    fs.writeFileSync(path.resolve(__dirname, '..', `${fileName}.json`), JSON.stringify(data, null, 2));
+    fs.writeFileSync(path.resolve(__dirname, '../..', `${fileName}.json`), JSON.stringify(data, null, 2));
   } catch (error) {
     console.log(error);
   }

@@ -1,4 +1,6 @@
-const Deploy = require('../actions/deploy');
+"use strict";
+
+const Deploy = require('../actions/Deploy');
 
 module.exports = {
   description: 'Deploy project to server',

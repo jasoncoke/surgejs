@@ -1,3 +1,5 @@
+"use strict";
+
 const Table = require('cli-table3');
 const { readJsonFile, writeJsonFile } = require('../utils/helper');
 

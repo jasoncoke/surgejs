@@ -1,4 +1,7 @@
+"use strict";
+
 // This is the terminal command collection file
+const Reset = require('./commands/reset');
 const Config = require('./commands/config');
 const Deploy = require('./commands/deploy');
 const Server = require('./commands/server');
@@ -6,9 +9,10 @@ const Show = require('./commands/show');
 const Store = require('./commands/store');
 
 module.exports = {
-  'config': Config,
   'deploy': Deploy,
-  'show': Show,
+  'config': Config,
   'server': Server,
+  'show': Show,
+  'reset': Reset,
   'store': Store
 }
