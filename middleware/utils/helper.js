@@ -56,27 +56,19 @@ module.exports.displayOptions = function (options, selectedIndex) {
 }
 
 module.exports.readJsonFile = function (fileName) {
-  try {
-    const data = fs.readFileSync(path.resolve(__dirname, '../..', `${fileName}.json`), 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.log(error);
-  }
+  const data = fs.readFileSync(path.resolve(__dirname, '../..', `${fileName}.json`), 'utf8');
+  return JSON.parse(data);
 }
 
 module.exports.writeJsonFile = function (fileName, key, value) {
-  try {
-    const data = readJsonFile(fileName);
-    if (value) {
-      data[key] = value;
-    } else {
-      delete data[key];
-    }
-
-    fs.writeFileSync(path.resolve(__dirname, '../..', `${fileName}.json`), JSON.stringify(data, null, 2));
-  } catch (error) {
-    console.log(error);
+  const data = this.readJsonFile(fileName);
+  if (value) {
+    data[key] = value;
+  } else {
+    delete data[key];
   }
+
+  fs.writeFileSync(path.resolve(__dirname, '../..', `${fileName}.json`), JSON.stringify(data, null, 2));
 }
 
 module.exports.isDirectory = function (path) {

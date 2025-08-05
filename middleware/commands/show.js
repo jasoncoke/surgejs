@@ -1,6 +1,6 @@
 "use strict";
 
-const Show = require('../actions/Show');
+const Show = require('../actions/ShowAction');
 
 module.exports = {
   description: 'Display something',

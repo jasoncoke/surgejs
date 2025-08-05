@@ -5,7 +5,7 @@ const path = require('path');
 const inquirer = require('inquirer');
 
 const ValidationException = require('../exceptions/ValidationException');
-const Server = require('./Server');
+const Server = require('./ServerAction');
 const deploySftp = require('../../providers/sftpProvider');
 const { readJsonFile, writeJsonFile } = require('../utils/helper');
 
@@ -29,7 +29,7 @@ async function inputDeployConfig() {
   const server = new Server();
   if (server.list.length === 0) {
     $message.warning('No servers found, please add first.')
-    await server.add()
+    await server.create()
   } else {
     await server.select()
   }

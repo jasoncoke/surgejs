@@ -1,12 +1,9 @@
 .DS_Store
 node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-package-lock.json
-tests/**/coverage/
-yarn.lock
-upload-test
+*-debug.log
+*-error.log
+*-lock.json
+*-lock.yaml
 
 # Editor directories and files
 .idea
@@ -22,3 +19,6 @@ upload-test
 # Config files
 config.json
 .env
+
+# Test folder 
+test/

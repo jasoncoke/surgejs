@@ -1,6 +1,6 @@
 "use strict";
 
-const Reset = require('../actions/Reset');
+const Reset = require('../actions/ResetAction');
 
 module.exports = {
   description: 'Add, delete, modify and check the saved server list',
