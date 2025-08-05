@@ -5,7 +5,7 @@ const path = require('path');
 const ValidationException = require('../exceptions/ValidationException');
 const { SSH_PRIVATE_KEY_PATH } = require('../constants/envKey');
 const { getFormatDate, readJsonFile, writeJsonFile } = require('../utils/helper');
-const { readEnvFile, writeEnvFile } = require('../../providers/envProvider');
+const { getEnvValue, writeEnvFile } = require('../../providers/envProvider');
 
 module.exports = class Server {
   constructor() {
@@ -31,7 +31,7 @@ module.exports = class Server {
     }
 
     // 保存至 env
-    if (readEnvFile().SSH_PRIVATE_KEY_PATH && params.connectMethod === 2) {
+    if (getEnvValue(SSH_PRIVATE_KEY_PATH) && params.connectMethod === 2) {
       writeEnvFile(SSH_PRIVATE_KEY_PATH, params.privateKeyPath);
     }
 
@@ -169,7 +169,7 @@ module.exports = class Server {
       questionsNext.unshift({
         type: 'input',
         name: 'privateKeyPath',
-        default: readEnvFile().SSH_PRIVATE_KEY_PATH || '',
+        default: getEnvValue(SSH_PRIVATE_KEY_PATH) || '',
         message: 'Private key path: ',
       })
     }

@@ -52,7 +52,30 @@ function writeEnvFile(key, value) {
   }
 }
 
+/**
+ * Get the value of the specified key in the env file
+ * @param {string} key 
+ * @returns 
+ */
+function getEnvValue(key) {
+  const envVariables = readEnvFile();
+
+  if (!envVariables[key]) return null;
+  return envVariables[key];
+}
+
+/**
+ * Get the set of env file keys
+ * @returns array[string]
+ */
+function getEnvKeys() {
+  const envVariables = readEnvFile();
+  return Object.keys(envVariables);
+}
+
 module.exports = {
   readEnvFile,
   writeEnvFile,
+  getEnvValue,
+  getEnvKeys
 };
