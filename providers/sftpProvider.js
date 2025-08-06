@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const SftpClient = require('ssh2-sftp-client');
-const ProgressBar = require('../components/console/ProgressBar');
+const ProgressBar = require('../components/ProgressBar');
 
 const ValidationException = require('../middleware/exceptions/ValidationException');
 const { getFolderSize, formatBytes } = require('../middleware/utils/helper');

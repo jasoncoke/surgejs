@@ -1,6 +1,6 @@
 'use strict';
 
-const Server = require('../actions/ServerAction');
+const Server = require('../../actions/ServerAction');
 
 module.exports = {
   description: 'Add, delete, modify and check the saved server list',
@@ -11,7 +11,7 @@ module.exports = {
     ['edt, edit <server_host | server_name>', 'Remove a server']
   ],
   action: (args, options) => {
-    const server = new Server();
+    const server = new Server(args, options);
     if (args.list) {
       server.getServerList();
     } else if (['cr', 'create'].includes(options.args[0])) {

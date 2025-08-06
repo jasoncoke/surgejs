@@ -1,6 +1,6 @@
 'use strict';
 
-const Reset = require('../actions/ResetAction');
+const Reset = require('../../actions/ResetAction');
 
 module.exports = {
   description: 'Add, delete, modify and check the saved server list',
@@ -11,7 +11,6 @@ module.exports = {
     ['edt, edit <server_host | server_name>', 'Remove a server']
   ],
   action: (args, options) => {
-    console.log('target output >>> args', args);
     new Reset(args, options);
   }
 };

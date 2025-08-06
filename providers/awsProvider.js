@@ -5,7 +5,7 @@ const ora = require('ora');
 const path = require('path');
 const { readdirSync, readFileSync, writeFileSync, existsSync } = require('fs');
 const { isDirectory } = require('../middleware/utils/helper');
-const { SURGEJS_CONFIG } = require('../middleware/config');
+const { SURGEJS_CONFIG } = require('../middleware/utils/config');
 
 const processPath = process.cwd();
 

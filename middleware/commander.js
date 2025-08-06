@@ -3,7 +3,7 @@
 const { Command } = require('commander');
 const levenary = require('levenary');
 
-const terminal = require('./terminal');
+const terminals = require('./terminals');
 const packages = require('../package.json');
 
 const Buffer = require('buffer').Buffer;
@@ -14,18 +14,31 @@ const welcomeStr = Buffer.from(
 ).toString('utf-8');
 
 const program = new Command();
+const commands = Object.keys(terminals);
 
-const commands = Object.keys(terminal);
+// Load commands
+function initCommandsByChain(commander, terminals) {
+  Object.entries(terminals).forEach(([name, terminal]) => {
+    const command = commander
+      .command(name)
+      .description(terminal.description)
+      .action(terminal.action);
 
-Object.entries(terminal).forEach(([key, value]) => {
-  const command = program.command(key).description(value.description).action(value.action);
+    // Load options
+    if (terminal.options && Array.isArray(terminal.options) && terminal.options.length) {
+      terminal.options.forEach((option) => {
+        option && command.option(option[0], option[1], option[2]);
+      });
+    }
 
-  if (value.options && Array.isArray(value.options) && value.options.length) {
-    value.options.forEach((option) => {
-      option && command.option(option[0], option[1], option[2]);
-    });
-  }
-});
+    // Load nested commands
+    if (terminal.commanders && Object.keys(terminal.commanders).length) {
+      initCommandsByChain(command, terminal.commanders);
+    }
+  });
+}
+
+initCommandsByChain(program, terminals);
 
 program
   .name(packages.name)

@@ -1,12 +1,7 @@
 'use strict';
 
-module.exports = class Config {
-  constructor() {
-    this.CONFIG_KEY = 'projects';
-    this.list = readJsonFile('config')[this.CONFIG_KEY] || [];
-
-    this.configs = {
-      rootPath: process.cwd()
-    };
+module.exports = class Config extends require('./ActionConstructor') {
+  constructor(args, options) {
+    super(args, options);
   }
 };
