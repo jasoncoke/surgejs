@@ -33,7 +33,7 @@ async function inputDeployConfig(configs) {
 
   return Promise.resolve({
     ...answers,
-    server_uid: server.activeServer.uid
+    server_uid: server.uid
   });
 }
 
@@ -115,9 +115,9 @@ module.exports = class Deploy extends require('./ActionConstructor') {
       username: server.username
     };
 
-    if (server.connectMethod === 1) {
+    if (server.authMethod === 1) {
       sftpConfig.password = server.password;
-    } else if (server.connectMethod === 2) {
+    } else if (server.authMethod === 2) {
       sftpConfig.privateKey = fs.readFileSync(server.privateKeyPath);
     }
 

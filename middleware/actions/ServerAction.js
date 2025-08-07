@@ -1,8 +1,6 @@
 'use strict';
 
 const inquirer = require('inquirer');
-const Table = require('cli-table3');
-const path = require('path');
 
 const ValidationException = require('../exceptions/ValidationException');
 const { getFormatDate, generateSimpleHash, stringify } = require('../utils/helper');
@@ -10,7 +8,6 @@ const {
   CHANNEL_USER,
   CHANNEL_SERVERS,
   USER_KEY_SSH_PRIVATE_PATH,
-  SURGEJS_CONFIG_JSON_PATH,
   getServerConfigs,
   getValueForObject,
   updateSingleConfig,
@@ -21,10 +18,8 @@ module.exports = class Server extends require('./ActionConstructor') {
   constructor(options, commander) {
     super(options, commander);
 
-    this.servers = getServerConfigs();
-
     this.uid = null;
-    this.activeServer = null;
+    this.servers = getServerConfigs();
   }
 
   async create() {
@@ -36,17 +31,17 @@ module.exports = class Server extends require('./ActionConstructor') {
   _save() {
     const params = {
       ...this.configs,
-      created_at: getFormatDate()
+      createdAt: getFormatDate()
     };
 
     params.uid = generateSimpleHash(stringify(params));
 
     // 保存至 env
-    if (params.connectMethod === 2) {
+    if (params.authMethod === 2) {
       updateConfigForObject(CHANNEL_USER, USER_KEY_SSH_PRIVATE_PATH, params.privateKeyPath);
     }
 
-    this.activeServer = params;
+    this.uid = params.uid;
     this.servers.push(params);
     this.write();
   }
@@ -64,29 +59,12 @@ module.exports = class Server extends require('./ActionConstructor') {
     if (!server) {
       ValidationException.throw(
         'Serve remove failed',
-        'Server not found! You can use [ surgejs show servers ] to view all servers'
+        'Server not found! You can use "surgejs show --server" to view all servers'
       );
     } else {
       this.servers = this.servers.filter((item) => item.host !== server.host);
       this.write();
       $message.success(`Server「 ${value} 」 removed successfully!`);
-    }
-  }
-
-  // TODO
-  edit(value) {
-    if (!value) {
-      ValidationException.throw('Serve edit failed', 'Please input server host or server name');
-    }
-
-    const server = this.servers.find((server) => server.name === value || server.host === value);
-    if (!server) {
-      ValidationException.throw(
-        'Serve edit failed',
-        'Server not found! You can use [ surgejs show servers ] to view all server'
-      );
-    } else {
-      console.log('Features under development...');
     }
   }
 
@@ -96,14 +74,14 @@ module.exports = class Server extends require('./ActionConstructor') {
     const questions = [
       {
         type: 'list',
-        name: 'selectServerHost',
+        name: 'selectedServerUid',
         default: defaultChooseIndex,
         message: 'Select or add a server: ',
         choices: this.servers
           .map((server, index) => {
             const choice = {
               name: `${server.name} - ${server.host}`,
-              value: server.host
+              value: server.uid
             };
 
             if (defaultChooseIndex === index) {
@@ -113,41 +91,23 @@ module.exports = class Server extends require('./ActionConstructor') {
             return choice;
           })
           .concat({
-            name: 'Add new server',
-            value: 'add'
+            name: 'Create a new server',
+            value: 'create'
           })
       }
     ];
 
-    const { selectServerHost } = await inquirer.prompt(questions);
+    const { selectedServerUid } = await inquirer.prompt(questions);
 
-    if (selectServerHost === 'add') {
+    if (selectedServerUid === 'create') {
       await this.create();
     } else {
-      this.activeServer = this.servers.find((server) => server.host === selectServerHost);
+      this.uid = selectedServerUid;
     }
-  }
-
-  getServerByHost(host) {
-    return this.servers.find((server) => server.host === host);
   }
 
   static getServerByUid(uid) {
     return getServerConfigs().find((server) => server.uid === uid);
-  }
-
-  getServerList() {
-    const table = new Table({
-      head: ['name', 'username', 'host', 'created_at']
-    });
-    this.servers.forEach((server) => {
-      table.push([server.name, server.username, server.host, server.created_at]);
-    });
-
-    console.log(table.toString());
-    console.log(
-      `You can view more configuration content in ${SURGEJS_CONFIG_JSON_PATH}`.brightYellow
-    );
   }
 
   async inputServerConfig(list) {
@@ -158,6 +118,7 @@ module.exports = class Server extends require('./ActionConstructor') {
         message: 'Host: ',
         required: true,
         validate(value) {
+          if (!value) return 'Host cannot be empty';
           return list.find((server) => server.host === value) ? 'Host already exists' : true;
         }
       },
@@ -175,11 +136,11 @@ module.exports = class Server extends require('./ActionConstructor') {
       },
       {
         type: 'list',
-        name: 'connectMethod',
-        message: 'Choose how to connect: ',
+        name: 'authMethod',
+        message: 'Select authentication method: ',
         choices: [
-          { value: 1, name: 'Password' },
-          { value: 2, name: 'Private Key' }
+          { value: 1, name: 'Password Authentication' },
+          { value: 2, name: 'Key-based Authentication' }
         ]
       }
     ];
@@ -197,13 +158,13 @@ module.exports = class Server extends require('./ActionConstructor') {
       }
     ];
 
-    if (answers.connectMethod === 1) {
+    if (answers.authMethod === 1) {
       questionsNext.unshift({
         type: 'password',
         name: 'password',
         message: 'Password: '
       });
-    } else if (answers.connectMethod === 2) {
+    } else if (answers.authMethod === 2) {
       questionsNext.unshift({
         type: 'input',
         name: 'privateKeyPath',
@@ -214,18 +175,32 @@ module.exports = class Server extends require('./ActionConstructor') {
 
     const answersNext = await inquirer.prompt(questionsNext);
 
-    return Promise.resolve({
-      ...answers,
-      ...answersNext
-    });
+    const allAnswers = Object.assign(answers, answersNext);
+    if (allAnswers.authMethod === 2) {
+      delete allAnswers.privateKeyPath;
+    }
+
+    return Promise.resolve(allAnswers);
   }
 
   async choose(uid) {
     if (this.servers.length === 0) {
-      $message.warning('No servers found, please add first~');
+      $message.warning('No server configuration available, please create one first~');
       await this.create();
     } else {
       await this.select(uid);
     }
+  }
+
+  searchByKeyword(keyword) {
+    return this.servers
+      .filter((server) => {
+        return (
+          server.name.includes(keyword) ||
+          server.host.includes(keyword) ||
+          server.uid.includes(keyword)
+        );
+      })
+      .map((server) => server.uid);
   }
 };

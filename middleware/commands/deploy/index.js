@@ -1,19 +1,19 @@
 'use strict';
 
 const Deploy = require('../../actions/DeployAction');
-const DeployInit = require('./init');
+const Init = require('./init');
 
 module.exports = {
   description: 'Deploy project to server',
   commanders: {
-    init: DeployInit
+    init: Init
   },
-  options: [['-l,--log', 'Get the current project deployment log']],
+  options: [],
   action: (options, commander) => {
-    const deploy = new Deploy(options, commander);
+    const deployInstance = new Deploy(options, commander);
 
     if (commander.args.length === 0) {
-      return deploy.deploy();
+      return deployInstance.deploy();
     }
   }
 };

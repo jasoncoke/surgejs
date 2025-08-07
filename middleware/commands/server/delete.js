@@ -1,13 +1,10 @@
 'use strict';
 
 const Server = require('../../actions/ServerAction');
-const Create = require('./create');
 
 module.exports = {
-  description: 'create, delete, modify and check the saved server list',
-  commanders: {
-    create: Create
-  },
+  description: 'Delete a server configuration ',
+  alias: 'dl',
   options: [],
   action: (options, commander) => {
     const serverInstance = new Server(options, commander);

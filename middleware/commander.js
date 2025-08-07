@@ -24,6 +24,10 @@ function initCommandsByChain(commander, terminals) {
       .description(terminal.description)
       .action(terminal.action);
 
+    if (terminal.alias) {
+      command.alias(terminal.alias);
+    }
+
     // Load options
     if (terminal.options && Array.isArray(terminal.options) && terminal.options.length) {
       terminal.options.forEach((option) => {

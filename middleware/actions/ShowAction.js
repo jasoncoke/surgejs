@@ -13,21 +13,23 @@ module.exports = class Show extends require('./ActionConstructor') {
   showServerList() {
     const data = getServerConfigs();
     const headers = {
+      uid: 'UID',
       name: 'Name',
       host: 'Host',
-      connectMethod: 'Authentication method',
-      created_at: 'Created At'
+      authMethod: 'Authentication method',
+      lastConnectedAt: 'Last Connected At',
+      createdAt: 'Created At'
     };
 
     this._tableBuilder(
       Object.values(headers),
       data.map((item) => {
         const body = this._arrayPick(item, Object.keys(headers));
-        switch (body.connectMethod) {
+        switch (body.authMethod) {
           case 1:
-            body.connectMethod = 'Password Authentication';
+            body.authMethod = 'Password Authentication';
           case 2:
-            body.connectMethod = 'Key-based Authentication';
+            body.authMethod = 'Key-based Authentication';
         }
 
         return Object.values(body);

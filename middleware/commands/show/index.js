@@ -9,18 +9,18 @@ module.exports = {
     ['-p,--project', 'Displays a list of configured projects']
   ],
   action: (options, commander) => {
-    const show = new Show(options, commander);
+    const showInstance = new Show(options, commander);
 
     if (options.server) {
-      return show.showServerList();
+      return showInstance.showServerList();
     }
 
     if (options.project) {
-      return show.showProjectList();
+      return showInstance.showProjectList();
     }
 
     if (commander.args.length === 0) {
-      return show.showCurrent();
+      return showInstance.showCurrent();
     }
   }
 };
