@@ -14,8 +14,12 @@ module.exports = async function deploySftp({ localPath, remotePath, sftpConfig }
 
   try {
     const startTimestamp = Date.now();
-    const { size, count } = getFolderInfo(localPath);
     const folderName = path.basename(localPath);
+    const { size, count } = getFolderInfo(localPath);
+
+    if (count === 0) {
+      return $message.error('No files need to be transferred to the remote end');
+    }
 
     let remoteFileCount = 0;
     let remoteFileSize = 0;

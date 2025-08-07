@@ -10,7 +10,7 @@ module.exports = {
     ['rm, remove <server_host | server_name>', 'Remove a server'],
     ['edt, edit <server_host | server_name>', 'Remove a server']
   ],
-  action: (args, options) => {
-    new Reset(args, options);
+  action: (options, commander) => {
+    new Reset(options, commander);
   }
 };

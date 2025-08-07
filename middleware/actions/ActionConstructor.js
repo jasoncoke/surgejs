@@ -6,8 +6,8 @@ module.exports = class ActionConstructor {
    * @param {array} args
    * @param {object} options
    */
-  constructor(args, options) {
-    this.args = args;
+  constructor(options, commander) {
     this.options = options;
+    this.commander = commander;
   }
 };

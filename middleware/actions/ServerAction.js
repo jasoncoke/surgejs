@@ -18,8 +18,8 @@ const {
 } = require('../utils/config');
 
 module.exports = class Server extends require('./ActionConstructor') {
-  constructor(args, options) {
-    super(args, options);
+  constructor(options, commander) {
+    super(options, commander);
 
     this.servers = getServerConfigs();
 

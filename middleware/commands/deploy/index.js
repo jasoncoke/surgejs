@@ -9,10 +9,10 @@ module.exports = {
     init: DeployInit
   },
   options: [['-l,--log', 'Get the current project deployment log']],
-  action: (args, options) => {
-    const deploy = new Deploy(args, options);
+  action: (options, commander) => {
+    const deploy = new Deploy(options, commander);
 
-    if (options.args.length === 0) {
+    if (commander.args.length === 0) {
       return deploy.deploy();
     }
   }

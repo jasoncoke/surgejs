@@ -38,8 +38,8 @@ async function inputDeployConfig(configs) {
 }
 
 module.exports = class Deploy extends require('./ActionConstructor') {
-  constructor(args, options) {
-    super(args, options);
+  constructor(options, commander) {
+    super(options, commander);
 
     this.projects = getProjectConfigs();
     this.rootPath = process.cwd();
@@ -70,7 +70,7 @@ module.exports = class Deploy extends require('./ActionConstructor') {
     updateSingleConfig(CHANNEL_PROJECTS, this.projects);
   }
 
-  clean() { }
+  clean() {}
 
   /**
    * Update or insert configuration information

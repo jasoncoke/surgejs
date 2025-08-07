@@ -6,8 +6,8 @@ const { getServerConfigs, getProjectConfigs } = require('../utils/config');
 const { prettierPrint } = require('../utils/helper');
 
 module.exports = class Show extends require('./ActionConstructor') {
-  constructor(args, options) {
-    super(args, options);
+  constructor(options, commander) {
+    super(options, commander);
   }
 
   showServerList() {

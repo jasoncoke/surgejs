@@ -10,16 +10,23 @@ module.exports = {
     ['rm, remove <server_host | server_name>', 'Remove a server'],
     ['edt, edit <server_host | server_name>', 'Remove a server']
   ],
-  action: (args, options) => {
-    const server = new Server(args, options);
-    if (args.list) {
-      server.getServerList();
-    } else if (['cr', 'create'].includes(options.args[0])) {
-      server.create();
-    } else if (['rm', 'remove'].includes(options.args[0])) {
-      server.remove(options.args[1]);
-    } else if (['edt', 'edit'].includes(options.args[0])) {
-      server.edit(options.args[1]);
+  action: (options, commander) => {
+    const serverInstance = new Server(options, commander);
+
+    if (options.list) {
+      return serverInstance.getServerList();
+    }
+
+    if (['cr', 'create'].includes(commander.args[0])) {
+      return serverInstance.create();
+    }
+
+    if (['rm', 'remove'].includes(commander.args[0])) {
+      return serverInstance.remove(commander.args[1]);
+    }
+
+    if (['edt', 'edit'].includes(commander.args[0])) {
+      return serverInstance.edit(commander.args[1]);
     }
   }
 };

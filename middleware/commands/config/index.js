@@ -12,5 +12,5 @@ module.exports = {
     ['<key> <value>', 'Set env by key value'],
     ['-l, --list', 'List current configuration items']
   ],
-  action: (args, options) => {}
+  action: (options, commander) => {}
 };
