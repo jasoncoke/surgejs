@@ -39,20 +39,29 @@ module.exports.formatNumber = function (number) {
  * @param {string} folderPath
  * @returns {number}
  */
-module.exports.getFolderSize = function (folderPath) {
+module.exports.getFolderInfo = function (folderPath) {
+  let totalFiles = 0;
   let totalSize = 0;
+
   const files = fs.readdirSync(folderPath);
   files.forEach((file) => {
     const filePath = path.join(folderPath, file);
     const stats = fs.statSync(filePath);
+
     if (stats.isDirectory()) {
-      totalSize += getFolderSize(filePath);
+      const { size, count } = module.exports.getFolderInfo(filePath);
+      totalFiles += count;
+      totalSize += size;
     } else {
-      // 如果是文件，则累加其大小
+      totalFiles++;
       totalSize += stats.size;
     }
   });
-  return totalSize;
+
+  return {
+    size: totalSize,
+    count: totalFiles
+  };
 };
 
 /**
