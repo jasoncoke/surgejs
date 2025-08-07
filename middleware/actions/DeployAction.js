@@ -6,7 +6,7 @@ const inquirer = require('inquirer');
 
 const ValidationException = require('../exceptions/ValidationException');
 const Server = require('./ServerAction');
-const deploySftp = require('../../providers/sftpProvider');
+const deploySftp = require('../providers/sftpProvider');
 const { getFormatDate } = require('../utils/helper');
 const { CHANNEL_PROJECTS, getProjectConfigs, updateSingleConfig } = require('../utils/config');
 
@@ -70,7 +70,7 @@ module.exports = class Deploy extends require('./ActionConstructor') {
     updateSingleConfig(CHANNEL_PROJECTS, this.projects);
   }
 
-  clean() {}
+  clean() { }
 
   /**
    * Update or insert configuration information
