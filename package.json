@@ -1,6 +1,6 @@
 {
     "name": "surgejs",
-    "version": "0.1.3",
+    "version": "0.1.5",
     "description": "Quickly deploy front-end projects and support the configuration of multiple servers and projects.",
     "main": "index.js",
     "bin": {
