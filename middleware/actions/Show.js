@@ -1,7 +1,7 @@
 'use strict';
 
 const Table = require('cli-table3');
-const Server = require('./ServerAction');
+const Server = require('./Server');
 const { getServerConfigs, getProjectConfigs } = require('../utils/config');
 const { prettierPrint } = require('../utils/helper');
 

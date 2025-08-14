@@ -1,6 +1,6 @@
 'use strict';
 
-const Deploy = require('../../actions/DeployAction');
+const Deploy = require('../../actions/Deploy');
 
 module.exports = {
   description: 'Initialize the configuration in the current working directory',

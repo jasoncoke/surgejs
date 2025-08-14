@@ -1,6 +1,6 @@
 'use strict';
 
-const Server = require('../../actions/ServerAction');
+const Server = require('../../actions/Server');
 
 module.exports = {
   description: 'Delete a server configuration ',

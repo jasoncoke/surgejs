@@ -5,7 +5,7 @@ const path = require('path');
 const inquirer = require('inquirer');
 
 const ValidationException = require('../exceptions/ValidationException');
-const Server = require('./ServerAction');
+const Server = require('./Server');
 const deploySftp = require('../providers/sftpProvider');
 const { getFormatDate } = require('../utils/helper');
 const { CHANNEL_PROJECTS, getProjectConfigs, updateSingleConfig } = require('../utils/config');
@@ -29,11 +29,11 @@ async function inputDeployConfig(configs) {
   const answers = await inquirer.prompt(questions);
 
   const server = new Server();
-  await server.choose(configs.server_uid);
+  const uid = await server.choose(configs.server_uid);
 
   return Promise.resolve({
     ...answers,
-    server_uid: server.uid
+    server_uid: uid
   });
 }
 
