@@ -8,7 +8,14 @@ const ValidationException = require('../exceptions/ValidationException');
 const Server = require('./Server');
 const deploySftp = require('../providers/sftpProvider');
 const { getFormatDate } = require('../utils/helper');
-const { CHANNEL_PROJECTS, getProjectConfigs, updateSingleConfig } = require('../utils/config');
+const {
+  CHANNEL_PROJECTS,
+  CHANNEL_USER,
+  USER_KEY_SSH_PRIVATE_PATH,
+  getProjectConfigs,
+  getValueForObject,
+  updateSingleConfig
+} = require('../utils/config');
 
 async function inputDeployConfig(configs) {
   const questions = [
@@ -118,7 +125,9 @@ module.exports = class Deploy extends require('./ActionConstructor') {
     if (server.authMethod === 1) {
       sftpConfig.password = server.password;
     } else if (server.authMethod === 2) {
-      sftpConfig.privateKey = fs.readFileSync(server.privateKeyPath);
+      sftpConfig.privateKey = fs.readFileSync(
+        getValueForObject(CHANNEL_USER, USER_KEY_SSH_PRIVATE_PATH)
+      );
     }
 
     return sftpConfig;
