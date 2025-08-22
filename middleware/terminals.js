@@ -11,6 +11,5 @@ module.exports = {
   deploy: Deploy,
   config: Config,
   server: Server,
-  show: Show,
-  store: Store
+  show: Show
 };
