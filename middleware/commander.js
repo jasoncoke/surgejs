@@ -47,7 +47,7 @@ initCommandsByChain(program, terminals);
 program
   .name(packages.name)
   .version(packages.version, '-v, -V,--version', 'output the current version')
-  .usage(`[command] [options]`)
+  .usage(`<command> [options]`)
   .description(packages.description.cyan);
 
 program.action((args, options) => {
