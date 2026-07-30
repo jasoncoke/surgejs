@@ -2,5 +2,5 @@
 'use strict';
 
 require('colors');
-require('./middleware/global/message');
-require('./middleware/commander');
+require('./lib/global/message');
+require('./lib/commander');

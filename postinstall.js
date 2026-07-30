@@ -3,13 +3,13 @@
 // This is the callback after installing this package
 const fs = require('fs');
 const path = require('path');
-const { getPrivateKetPath } = require('./middleware/utils/helper');
+const { getPrivateKeyPath } = require('./lib/utils/helper');
 const {
   SURGEJS_CONFIG_JSON_FILENAME,
   CHANNEL_USER,
   USER_KEY_SSH_PRIVATE_PATH,
   updateSingleConfig
-} = require('./middleware/utils/config');
+} = require('./lib/utils/config');
 
 function createFile(fileName, content, filePath = path.resolve(__dirname, fileName)) {
   if (!fs.existsSync(filePath)) {
@@ -20,5 +20,5 @@ function createFile(fileName, content, filePath = path.resolve(__dirname, fileNa
 // Create necessary files
 createFile(SURGEJS_CONFIG_JSON_FILENAME, '{}');
 updateSingleConfig(CHANNEL_USER, {
-  [USER_KEY_SSH_PRIVATE_PATH]: getPrivateKetPath()
+  [USER_KEY_SSH_PRIVATE_PATH]: getPrivateKeyPath()
 });
